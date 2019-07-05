@@ -1,0 +1,14 @@
+.code-editor {}
+
+.monaco {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+}
+
+@media only screen and (max-width: 600px) {
+    .monaco {
+        height: 120px;
+    }
+}

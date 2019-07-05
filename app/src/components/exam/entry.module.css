@@ -1,0 +1,15 @@
+.entry {
+    height: 100vh;
+    padding-top: 200px;
+    background-color: #282c34;
+    text-align: center;
+
+
+}
+
+
+.entry h3 {
+    color: white;
+    font-size: 2rem;
+    margin: 3rem;
+}
