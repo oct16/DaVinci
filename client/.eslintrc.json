@@ -1,0 +1,33 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "extends": [
+        "react-app"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "jsx": true,
+        "useJSXTextNode": true
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "react-hooks"
+    ],
+    "rules": {
+        "jsx-a11y/anchor-is-valid": "off",
+        "no-script-url": "off",
+        "no-useless-constructor": "off",
+        "no-unused-vars": "off",
+        "jsx-a11y/jsx-no-bind": "off"
+    }
+}

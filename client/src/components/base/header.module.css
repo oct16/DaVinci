@@ -1,0 +1,15 @@
+.app-header {
+    border-bottom: 1px solid #E6E7EB;
+    height: 40px;
+}
+
+.user-info {
+    margin-right: 60px
+}
+
+.user-info i {
+    margin-right: 10px;
+    vertical-align: middle;
+    font-size: 16px;
+    transform: translateY(-1px);
+}

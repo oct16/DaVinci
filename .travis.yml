@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+    - stable
+branchs:
+    only:
+        - master
+cache:
+    directories:
+        - node_modules
+addons:
+    ssh_known_hosts:
+        - $server_ip
+install:
+    - cd client
+    - npm install
+script:
+    - npm run build
+after_success:
+    - openssl aes-256-cbc -K $encrypted_ec9fd028e7c1_key -iv $encrypted_ec9fd028e7c1_iv
+      -in id_rsa.enc -out ~/.ssh/id_rsa -d
+    - chmod 600 ~/.ssh/id_rsa
+after_script:
+    - cd build
+    - rsync -arvz ./* root@$server_ip:/root/app/server

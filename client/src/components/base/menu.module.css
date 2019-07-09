@@ -1,0 +1,14 @@
+.collapsed {
+    /* background: red; */
+    text-align: right;
+    height: 40px;
+}
+
+.collapsed i {
+    color: white;
+}
+
+.menu {
+    min-height: 100vh;
+    background: #001529;
+}

@@ -1,0 +1,22 @@
+.defaultLayout {
+    display: flex
+}
+
+.mainLayout {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    /* height: 100px */
+}
+
+.content {
+    flex: 1
+}
+
+.footer {
+    /* height: 100px */
+}

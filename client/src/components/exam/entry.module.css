@@ -1,0 +1,17 @@
+.entry {
+    height: 100vh;
+    background-color: #282c34;
+    text-align: center;
+    overflow: hidden;
+}
+
+.entryBox {
+    margin: 0 auto;
+    padding-bottom: 100px;
+}
+
+.entry h3 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
