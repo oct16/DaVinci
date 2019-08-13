@@ -1,0 +1,19 @@
+{
+  "name": "davinci",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oct16/DaVinci.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oct16/DaVinci/issues"
+  },
+  "homepage": "https://github.com/oct16/DaVinci#readme"
+}

@@ -1,3 +1,5 @@
+dist: trusty
+sudo: required
 language: node_js
 node_js:
     - stable
@@ -9,16 +11,32 @@ cache:
         - node_modules
 addons:
     ssh_known_hosts:
-        - $server_ip
-install:
-    - cd client
-    - npm install
-script:
-    - npm run build
-after_success:
+        - $SERVER_HOST
+before_install:
     - openssl aes-256-cbc -K $encrypted_ec9fd028e7c1_key -iv $encrypted_ec9fd028e7c1_iv
       -in id_rsa.enc -out ~/.ssh/id_rsa -d
     - chmod 600 ~/.ssh/id_rsa
-after_script:
-    - cd build
-    - rsync -arvz ./* root@$server_ip:/root/app/server
+install:
+    - cd $TRAVIS_BUILD_DIR/client
+    - npm i
+script:
+    - cd $TRAVIS_BUILD_DIR/client
+    - npm run build
+deploy:
+    - provider: script
+      skip_cleanup: true
+      script: ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST 'mkdir -p $DESTINATION_PATH/app && mkdir -p $DESTINATION_PATH/server'
+      on:
+          branch: master
+
+    - provider: script
+      skip_cleanup: true
+      script: echo 'deploy app' && rsync -ravz --progress -e "ssh -o StrictHostKeyChecking=no" $TRAVIS_BUILD_DIR/client/build/* $SERVER_USER@$SERVER_HOST:$DESTINATION_PATH/app/
+      on:
+          branch: master
+
+    - provider: script
+      skip_cleanup: true
+      script: echo 'deploy server' && rsync -ravz --progress -e "ssh -o StrictHostKeyChecking=no" $TRAVIS_BUILD_DIR/server/* $SERVER_USER@$SERVER_HOST:$DESTINATION_PATH/server/
+      on:
+          branch: master
