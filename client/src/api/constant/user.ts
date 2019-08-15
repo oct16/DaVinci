@@ -1,4 +1,4 @@
-import { HttpMethod, HttpOption } from '../../utils/rest'
+import { HttpMethod, HttpOption } from '@/utils/rest'
 
 export class UserAPIConstant {
     login = (name: string, password: string): HttpOption => ({

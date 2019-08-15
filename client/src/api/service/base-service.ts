@@ -1,4 +1,4 @@
-import { HttpOption, HttpResponse, RESTFul } from '../../utils/rest'
+import { HttpOption, HttpResponse, RESTFul } from '@/utils/rest'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 

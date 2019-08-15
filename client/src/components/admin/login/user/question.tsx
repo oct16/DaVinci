@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import EditTableComponent, { TableColumnProps } from '../../../base/edit-table'
-import service from '../../../../api/service'
+import EditTableComponent, { TableColumnProps } from '@/components/base/edit-table'
+import { $Api } from '@api'
 import { Button, Icon } from 'antd'
-import ModalFormComponent, { FormField } from '../../../base/modal-form'
+import ModalFormComponent, { FormField } from '@/components/base/modal-form'
 
 export default class AdminQuestionComponent extends Component {
     dialogRef: any
@@ -95,7 +95,7 @@ export default class AdminQuestionComponent extends Component {
 
     onRowUpdated(data: { row: any; key: number }, callback: Function) {
         const id = data.key
-        service.examService.putQuestion(id, data.row).subscribe(res => {
+        $Api.examService.putQuestion(id, data.row).subscribe(res => {
             callback(res)
         })
     }
@@ -105,7 +105,7 @@ export default class AdminQuestionComponent extends Component {
     }
 
     getQuestions(): void {
-        service.examService.questions().subscribe(res => {
+        $Api.examService.questions().subscribe(res => {
             this.setState({
                 dataSource: res.map(item => ({
                     ...item,
@@ -132,7 +132,7 @@ export default class AdminQuestionComponent extends Component {
                 return
             }
 
-            service.examService.createQuestion(values).subscribe(res => {
+            $Api.examService.createQuestion(values).subscribe(res => {
                 this.getQuestions()
                 form.resetFields()
                 this.setState({ dialogVisible: false })
@@ -145,7 +145,11 @@ export default class AdminQuestionComponent extends Component {
             <div>
                 <div className="d-flex justify-content-end mb-2">
                     <Button onClick={this.addQuestion.bind(this)}>
-                        <Icon style={{ float: 'left', height: '20px', lineHeight: '20px' }} className="align-middle" type="plus" />
+                        <Icon
+                            style={{ float: 'left', height: '20px', lineHeight: '20px' }}
+                            className="align-middle"
+                            type="plus"
+                        />
                         {'Question'}
                     </Button>
                 </div>
@@ -159,7 +163,11 @@ export default class AdminQuestionComponent extends Component {
                     onCreate={this.handleCreate}
                     fields={this.formFields}
                 />
-                <EditTableComponent data={this.state.dataSource} columns={this.columns} onRowUpdated={this.onRowUpdated} />
+                <EditTableComponent
+                    data={this.state.dataSource}
+                    columns={this.columns}
+                    onRowUpdated={this.onRowUpdated}
+                />
             </div>
         )
     }

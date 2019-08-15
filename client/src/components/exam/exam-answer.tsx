@@ -1,20 +1,12 @@
 import { withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
 import styles from './exam.module.css'
-import { ExamService } from '../../api/service/exam'
-import service from '../../api/service'
+import { $Api } from '@api'
 import ExamFormComponent from './exam-form'
 import { QuestionType } from './questions'
 
 class AdminExamAnswerComponent extends Component<any> {
-    examService: ExamService
-
     formValue: { [key: number]: string }
-    constructor(props) {
-        super(props)
-
-        this.examService = new ExamService()
-    }
 
     state: {
         name: string
@@ -46,7 +38,7 @@ class AdminExamAnswerComponent extends Component<any> {
     getExam(): void {
         const examineeId = this.props.match.params.examineeId
 
-        service.examService.examineeAnswer(examineeId).subscribe(res => {
+        $Api.examService.examineeAnswer(examineeId).subscribe(res => {
             const { exam, answers, examinee } = res
 
             const questions = answers.map(a => this.formatQuestion(a.question))
@@ -60,7 +52,6 @@ class AdminExamAnswerComponent extends Component<any> {
                 questions,
                 values
             })
-
         })
     }
 

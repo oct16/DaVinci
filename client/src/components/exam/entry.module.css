@@ -1,17 +1,81 @@
 .entry {
-    height: 100vh;
-    background-color: #282c34;
     text-align: center;
     overflow: hidden;
 }
 
 .entryBox {
     margin: 0 auto;
+    padding: 3rem;
     padding-bottom: 100px;
+    /* background: #efefef; */
 }
 
-.entry h3 {
-    color: white;
-    font-size: 2rem;
+.entryBox :global .ant-form {
+    text-align: center
+}
+
+.entryBox :global .ant-form-item {
+    margin: 0;
+}
+
+.entryBox h3 {
+    color: #999;
+    font-size: 3rem;
     margin-bottom: 3rem;
+    text-align: center;
+}
+
+.inputContainer {
+    display: inline-grid;
+    grid-template-columns: auto 60px;
+    margin: 0;
+    height: 60px;
+    margin: 1rem 0;
+    width: 100%;
+}
+
+.inputContainer input {
+    width: 300px;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding: 0 22px;
+    font-size: 16px;
+    border: 2px solid #aaa;
+    border-radius: 10px 0 0 10px;
+    outline: transparent;
+    transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.inputContainer input::placeholder {
+    color: #ccc;
+}
+
+.inputContainer button {
+    cursor: pointer;
+    width: 60px;
+    outline: transparent;
+    border-radius: 0 10px 10px 0;
+    position: relative;
+    border: 2px solid #aaa;
+    border-left-width: 0;
+    transition: border-color 0.25s ease;
+    background: transparent;
+}
+
+.inputContainer button:disabled i {
+    color: #ccc;
+}
+
+.inputContainer i {
+    cursor: pointer;
+    color: #666;
+    font-size: 20px;
+}
+
+.formItem :global .ant-form-explain {
+    display: none;
+    /* font-size: 16px;
+    color: #666;
+    text-indent: 20px;
+    text-align: left; */
 }

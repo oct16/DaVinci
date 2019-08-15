@@ -10,4 +10,4 @@ class Service {
     }
 }
 
-export default new Service()
+export const $Api = new Service()

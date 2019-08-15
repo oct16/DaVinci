@@ -1,4 +1,4 @@
-import { HttpMethod, HttpOption } from '../../utils/rest'
+import { HttpMethod, HttpOption } from '@/utils/rest'
 import { Question } from '../model/exam-model'
 
 export class ExamAPIConstant {

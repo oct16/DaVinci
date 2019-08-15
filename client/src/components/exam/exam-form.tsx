@@ -81,8 +81,8 @@ class ExamFormComponent extends Component<Readonly<{ form: any; onChange: any; v
         return (
             <li className={styles.questionItem}>
                 <h6>
-                    {title.split('').map(text => (
-                        <a key={index}>
+                    {title.split('').map((text, idx) => (
+                        <a key={idx}>
                             <b>
                                 <span>{text}</span>
                             </b>

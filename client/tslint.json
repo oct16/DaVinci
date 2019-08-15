@@ -5,6 +5,7 @@
     "rulesDirectory": [],
     "rules": {
         "jsx-no-multiline-js": false,
-        "jsx-no-lambda": false
+        "jsx-no-lambda": false,
+        "jsx-no-bind": false
     }
 }

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import EditTableComponent, { TableColumnProps } from '../../../base/edit-table'
-import service from '../../../../api/service'
+import EditTableComponent, { TableColumnProps } from '@/components/base/edit-table'
+import { $Api } from '@api'
 import { Button, Icon } from 'antd'
-import ModalFormComponent, { FormField } from '../../../base/modal-form'
+import ModalFormComponent, { FormField } from '@/components/base/modal-form'
 export default class AdminSelectionComponent extends Component {
     dialogRef: any
     questions: any
@@ -71,12 +71,12 @@ export default class AdminSelectionComponent extends Component {
     }
 
     getQuestions(): Promise<any> {
-        return service.examService.questions().toPromise()
+        return $Api.examService.questions().toPromise()
     }
 
     onRowUpdated(data: { row: any; key: number }, callback: Function) {
         const id = data.key
-        service.examService.putSelection(id, data.row).subscribe(res => {
+        $Api.examService.putSelection(id, data.row).subscribe(res => {
             callback(res)
         })
     }
@@ -99,7 +99,7 @@ export default class AdminSelectionComponent extends Component {
             }
 
             const questionId = this.questions.find(q => q.question === values.question)!.id
-            service.examService.addSelection(questionId, values!.value).subscribe(res => {
+            $Api.examService.addSelection(questionId, values!.value).subscribe(res => {
                 this.getSelections()
                 form.resetFields()
                 this.setState({ dialogVisible: false })
@@ -108,7 +108,7 @@ export default class AdminSelectionComponent extends Component {
     }
 
     getSelections() {
-        service.examService.selections().subscribe(res => {
+        $Api.examService.selections().subscribe(res => {
             this.setState({
                 dataSource: res.map(item => {
                     return { ...item, question: item.question.question }
@@ -122,7 +122,11 @@ export default class AdminSelectionComponent extends Component {
             <div>
                 <div className="d-flex justify-content-end mb-2">
                     <Button onClick={this.addSelection.bind(this)}>
-                        <Icon style={{ float: 'left', height: '20px', lineHeight: '20px' }} className="align-middle" type="plus" />
+                        <Icon
+                            style={{ float: 'left', height: '20px', lineHeight: '20px' }}
+                            className="align-middle"
+                            type="plus"
+                        />
                         {'Selection'}
                     </Button>
                     <ModalFormComponent
@@ -136,7 +140,11 @@ export default class AdminSelectionComponent extends Component {
                         fields={this.state.formFields}
                     />
                 </div>
-                <EditTableComponent data={this.state.dataSource} columns={this.columns} onRowUpdated={this.onRowUpdated} />
+                <EditTableComponent
+                    data={this.state.dataSource}
+                    columns={this.columns}
+                    onRowUpdated={this.onRowUpdated}
+                />
             </div>
         )
     }

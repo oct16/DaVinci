@@ -1,9 +1,9 @@
 import { Store } from 'redux'
 import { userLogin } from '../redux/actions/user'
-import service from '../api/service'
+import { $Api } from '@api'
 
 export default function setInitialization(store: Store) {
-    service.userService.getUser().subscribe(res => {
+    $Api.userService.getUser().subscribe(res => {
         if (res) {
             userLogin(res)(store.dispatch)
         }

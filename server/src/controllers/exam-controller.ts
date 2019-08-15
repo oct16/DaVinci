@@ -119,6 +119,16 @@ class ExamController implements ExamControllerMethods {
                 .getRepository(Examinee)
                 .findOne(token.examinee.id)
 
+            const exam = await getConnection()
+                .getRepository(Exam)
+                .findOne(token.exam.id, {
+                    relations: ['questions']
+                })
+            examinee!.questionSnapshot = JSON.stringify(exam!.questions)
+            await getConnection()
+                .getRepository(Examinee)
+                .save(examinee!)
+
             Object.keys(answers).forEach(async key => {
                 const value = answers[key]
 

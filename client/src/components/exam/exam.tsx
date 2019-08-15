@@ -4,22 +4,16 @@ import styles from './exam.module.css'
 import { TimeDown } from '../time-down'
 import { Modal } from 'antd'
 import ExamConfirmComponent from './exam-confirm'
-import service from '../../api/service'
+import { $Api } from '@api'
 import ExamFormComponent from './exam-form'
 import { QuestionType } from './questions'
-import { ExamService } from '../../api/service/exam'
 
 class ExamComponent extends Component<any> {
-    TimeDownComponentRef: TimeDown
-    examService: ExamService
-
     formValue: { [key: number]: string }
     constructor(props) {
         super(props)
         this.onTimeEnd = this.onTimeEnd.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
-
-        this.examService = new ExamService()
     }
 
     state: {
@@ -66,7 +60,7 @@ class ExamComponent extends Component<any> {
     }
 
     doSubmit() {
-        return service.examService.answer(this.formValue).toPromise()
+        return $Api.examService.answer(this.formValue).toPromise()
     }
 
     formatQuestion(question: any): any {
@@ -83,7 +77,7 @@ class ExamComponent extends Component<any> {
     getExam(): void {
         const examId = this.props.match.params.examId
 
-        service.examService.getExam(examId).subscribe(
+        $Api.examService.getExam(examId).subscribe(
             res => {
                 const { exam, token } = res
                 const { name, questions } = exam
@@ -130,11 +124,7 @@ class ExamComponent extends Component<any> {
                     <ExamTitle />
                     <div className="d-flex justify-content-between">
                         <Examinee />
-                        <TimeDown
-                            remainTime={this.state.remainTime}
-                            onTimeEnd={this.onTimeEnd}
-                            onRef={ref => (this.TimeDownComponentRef = ref)}
-                        />
+                        <TimeDown remainTime={this.state.remainTime} onTimeEnd={this.onTimeEnd} />
                     </div>
                     <hr style={{ margin: 0, marginBottom: '3rem' }} />
                     <ExamFormComponent onChange={this.onChangeHandle.bind(this)} questions={this.state.questions} />

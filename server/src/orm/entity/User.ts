@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BeforeUpdate, AfterLoad, BeforeInsert } from 'typeorm'
-import { aesEncrypt } from '../../utils/crypto'
+import { Entity, Column, BeforeInsert } from 'typeorm'
 import { Basics } from './basics'
+import { aesEncrypt } from '../../utils/crypto'
 
 export enum UserRoleEnumTypes {
     'ADMIN' = 'ADMIN',

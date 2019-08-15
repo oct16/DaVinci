@@ -10,7 +10,7 @@ class Timer extends Component<any> {
     }
 }
 
-export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd: Function; onRef: Function }>, any> {
+export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd: Function }>, any> {
     secondsRemaining: number
     endTime: number
     intervalHandle: any
@@ -21,11 +21,11 @@ export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd
     }
     constructor(props) {
         super(props)
-        props.onRef(this)
-
         this.startTimeDown = this.startTimeDown.bind(this)
         this.tick = this.tick.bind(this)
+    }
 
+    componentDidMount() {
         this.init()
     }
 
@@ -52,12 +52,7 @@ export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd
         }
     }
 
-    componentDidMount() {}
-
     componentWillUnmount() {
-        if (this.props.onRef) {
-            this.props.onRef(undefined)
-        }
         if (this.intervalHandle) {
             clearInterval(this.intervalHandle)
         }

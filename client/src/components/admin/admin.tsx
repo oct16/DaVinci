@@ -7,7 +7,7 @@ import AdminSelectionComponent from './login/user/selection'
 import AdminExamComponent from './login/user/exam'
 import AdminTokenComponent from './login/user/token'
 import AdminExamineeComponent from './login/user/examinee'
-export default class AdminComponent extends Component {
+export default class AdminComponent extends Component<any> {
     render(): JSX.Element {
         return (
             <div className={styles.admin}>

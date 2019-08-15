@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import EditTableComponent, { TableColumnProps } from '../../../base/edit-table'
-import service from '../../../../api/service'
+import EditTableComponent, { TableColumnProps } from '@/components/base/edit-table'
+import { $Api } from '@api'
 import { Button, Icon } from 'antd'
-import ModalFormComponent, { FormField } from '../../../base/modal-form'
+import ModalFormComponent, { FormField } from '@/components/base/modal-form'
 
 export default class AdminTokenComponent extends Component {
     dialogRef: any
@@ -23,7 +23,7 @@ export default class AdminTokenComponent extends Component {
         const id = data.key
         const examId = this.exams.find(e => e.name === exam)!.id
 
-        service.examService.putToken(id, { examId }).subscribe(res => {
+        $Api.examService.putToken(id, { examId }).subscribe(res => {
             callback()
         })
     }
@@ -99,11 +99,11 @@ export default class AdminTokenComponent extends Component {
     }
 
     getExams() {
-        return service.examService.exams().toPromise()
+        return $Api.examService.exams().toPromise()
     }
 
     getTokens(): void {
-        service.examService.tokens().subscribe(res => {
+        $Api.examService.tokens().subscribe(res => {
             this.setState({
                 dataSource: res.map(item => ({
                     ...item,
@@ -132,7 +132,7 @@ export default class AdminTokenComponent extends Component {
             }
             const { exam } = values
             const examId = this.exams.find(e => e.name === exam)!.id
-            service.examService.createToken(examId).subscribe(res => {
+            $Api.examService.createToken(examId).subscribe(res => {
                 this.getTokens()
                 form.resetFields()
                 this.setState({ dialogVisible: false })
@@ -145,7 +145,11 @@ export default class AdminTokenComponent extends Component {
             <div>
                 <div className="d-flex justify-content-end mb-2">
                     <Button onClick={this.addToken.bind(this)}>
-                        <Icon style={{ float: 'left', height: '20px', lineHeight: '20px' }} className="align-middle" type="plus" />
+                        <Icon
+                            style={{ float: 'left', height: '20px', lineHeight: '20px' }}
+                            className="align-middle"
+                            type="plus"
+                        />
                         {'Token'}
                     </Button>
                 </div>
@@ -159,7 +163,11 @@ export default class AdminTokenComponent extends Component {
                     onCreate={this.handleCreate}
                     fields={this.state.formFields}
                 />
-                <EditTableComponent data={this.state.dataSource} columns={this.state.columns} onRowUpdated={this.onRowUpdated} />
+                <EditTableComponent
+                    data={this.state.dataSource}
+                    columns={this.state.columns}
+                    onRowUpdated={this.onRowUpdated}
+                />
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import EditTableComponent, { TableColumnProps } from '../../../base/edit-table'
-import service from '../../../../api/service'
-import history from '../../../../utils/history'
+import EditTableComponent, { TableColumnProps } from '@/components/base/edit-table'
+import { $Api } from '@api'
+import { history } from '@/utils/history'
 
 export default class AdminExamineeComponent extends Component {
     dialogRef: any
@@ -67,7 +67,7 @@ export default class AdminExamineeComponent extends Component {
     }
 
     getExaminees(): void {
-        service.examService.examinees().subscribe(res => {
+        $Api.examService.examinees().subscribe(res => {
             this.setState({
                 dataSource: res.map(item => {
                     const { token } = item
@@ -83,6 +83,13 @@ export default class AdminExamineeComponent extends Component {
     }
 
     render() {
-        return <EditTableComponent noOperation data={this.state.dataSource} columns={this.columns} onRowUpdated={this.onRowUpdated} />
+        return (
+            <EditTableComponent
+                noOperation
+                data={this.state.dataSource}
+                columns={this.columns}
+                onRowUpdated={this.onRowUpdated}
+            />
+        )
     }
 }

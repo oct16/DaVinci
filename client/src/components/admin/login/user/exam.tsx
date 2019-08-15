@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import EditTableComponent, { TableColumnProps } from '../../../base/edit-table'
-import service from '../../../../api/service'
+import EditTableComponent, { TableColumnProps } from '@/components/base/edit-table'
+import { $Api } from '@api'
 import { tap } from 'rxjs/operators'
 import { Button, Icon } from 'antd'
-import ModalFormComponent, { FormField } from '../../../base/modal-form'
-import history from '../../../../utils/history'
+import ModalFormComponent, { FormField } from '@/components/base/modal-form'
+import { history } from '@/utils/history'
 
 export default class AdminExamComponent extends Component {
     dialogRef: any
@@ -22,7 +22,7 @@ export default class AdminExamComponent extends Component {
         const { questionList } = row
         const examId = key
         const ids = questionList.map(name => this.questions.find(item => item.question === name)!.id)
-        service.examService
+        $Api.examService
             .putExam(examId, {
                 ids,
                 name: row.name
@@ -33,7 +33,7 @@ export default class AdminExamComponent extends Component {
     }
 
     getQuestions() {
-        return service.examService
+        return $Api.examService
             .questions()
             .pipe(tap(questions => (this.questions = questions)))
             .toPromise()
@@ -128,7 +128,7 @@ export default class AdminExamComponent extends Component {
     }
 
     getExams(): void {
-        service.examService.exams().subscribe(res => {
+        $Api.examService.exams().subscribe(res => {
             this.setState({
                 columns: this.state.columns,
                 dataSource: res.map(item => {
@@ -161,7 +161,7 @@ export default class AdminExamComponent extends Component {
                 return
             }
             const ids = values.questions.map(name => this.questions.find(q => q.question === name)!.id)
-            service.examService.createExam({ ...values, questions: ids }).subscribe(res => {
+            $Api.examService.createExam({ ...values, questions: ids }).subscribe(res => {
                 this.getExams()
                 form.resetFields()
                 this.setState({ dialogVisible: false })
@@ -174,7 +174,11 @@ export default class AdminExamComponent extends Component {
             <div>
                 <div className="d-flex justify-content-end mb-2">
                     <Button onClick={this.addExam.bind(this)}>
-                        <Icon style={{ float: 'left', height: '20px', lineHeight: '20px' }} className="align-middle" type="plus" />
+                        <Icon
+                            style={{ float: 'left', height: '20px', lineHeight: '20px' }}
+                            className="align-middle"
+                            type="plus"
+                        />
                         {'Exam'}
                     </Button>
                 </div>
@@ -188,7 +192,11 @@ export default class AdminExamComponent extends Component {
                     onCreate={this.handleCreate}
                     fields={this.state.formFields}
                 />
-                <EditTableComponent data={this.state.dataSource} columns={this.state.columns} onRowUpdated={this.onRowUpdated} />{' '}
+                <EditTableComponent
+                    data={this.state.dataSource}
+                    columns={this.state.columns}
+                    onRowUpdated={this.onRowUpdated}
+                />{' '}
             </div>
         )
     }

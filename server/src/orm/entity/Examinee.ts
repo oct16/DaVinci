@@ -13,4 +13,7 @@ export class Examinee extends Basics {
 
     @OneToOne(type => Token, token => token.examinee)
     token: Token
+
+    @Column({ type: 'text' })
+    questionSnapshot: string
 }

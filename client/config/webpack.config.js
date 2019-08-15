@@ -1,5 +1,3 @@
-
-
 const fs = require('fs')
 const isWsl = require('is-wsl')
 const path = require('path')
@@ -118,7 +116,11 @@ module.exports = function(webpackEnv) {
         mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
         // Stop compilation early in production
         bail: isEnvProduction,
-        devtool: isEnvProduction ? (shouldUseSourceMap ? 'source-map' : false) : isEnvDevelopment && 'cheap-module-source-map',
+        devtool: isEnvProduction
+            ? shouldUseSourceMap
+                ? 'source-map'
+                : false
+            : isEnvDevelopment && 'cheap-module-source-map',
         // These are the "entry points" to our application.
         // This means they will be the "root" imports that are included in JS bundle.
         entry: [
@@ -146,11 +148,15 @@ module.exports = function(webpackEnv) {
             pathinfo: isEnvDevelopment,
             // There will be one main bundle, and one file per asynchronous chunk.
             // In development, it does not produce real files.
-            filename: isEnvProduction ? 'static/js/[name].[contenthash:8].js' : isEnvDevelopment && 'static/js/bundle.js',
+            filename: isEnvProduction
+                ? 'static/js/[name].[contenthash:8].js'
+                : isEnvDevelopment && 'static/js/bundle.js',
             // TODO: remove this when upgrading to webpack 5
             futureEmitAssets: true,
             // There are also additional JS chunk files if you use code splitting.
-            chunkFilename: isEnvProduction ? 'static/js/[name].[contenthash:8].chunk.js' : isEnvDevelopment && 'static/js/[name].chunk.js',
+            chunkFilename: isEnvProduction
+                ? 'static/js/[name].[contenthash:8].chunk.js'
+                : isEnvDevelopment && 'static/js/[name].chunk.js',
             // We inferred the "public path" (such as / or /my-project) from homepage.
             // We use "/" in development.
             publicPath: publicPath,
@@ -247,11 +253,15 @@ module.exports = function(webpackEnv) {
             // https://github.com/facebook/create-react-app/issues/290
             // `web` extension prefixes have been added for better support
             // for React Native Web.
-            extensions: paths.moduleFileExtensions.map(ext => `.${ext}`).filter(ext => useTypeScript || !ext.includes('ts')),
+            extensions: paths.moduleFileExtensions
+                .map(ext => `.${ext}`)
+                .filter(ext => useTypeScript || !ext.includes('ts')),
             alias: {
                 // Support React Native Web
                 // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-                'react-native': 'react-native-web'
+                'react-native': 'react-native-web',
+                '@': path.resolve(__dirname, '../src'),
+                '@api': path.resolve(__dirname, '../src/api/service/index.ts')
             },
             plugins: [
                 // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -475,7 +485,9 @@ module.exports = function(webpackEnv) {
             ),
             // Inlines the webpack runtime script. This script is too small to warrant
             // a network request.
-            isEnvProduction && shouldInlineRuntimeChunk && new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+            isEnvProduction &&
+                shouldInlineRuntimeChunk &&
+                new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
             // Makes some environment variables available in index.html.
             // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
             // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -561,7 +573,13 @@ module.exports = function(webpackEnv) {
                     resolveModuleNameModule: process.versions.pnp ? `${__dirname}/pnpTs.js` : undefined,
                     resolveTypeReferenceDirectiveModule: process.versions.pnp ? `${__dirname}/pnpTs.js` : undefined,
                     tsconfig: paths.appTsConfig,
-                    reportFiles: ['**', '!**/__tests__/**', '!**/?(*.)(spec|test).*', '!**/src/setupProxy.*', '!**/src/setupTests.*'],
+                    reportFiles: [
+                        '**',
+                        '!**/__tests__/**',
+                        '!**/?(*.)(spec|test).*',
+                        '!**/src/setupProxy.*',
+                        '!**/src/setupTests.*'
+                    ],
                     watch: paths.appSrc,
                     silent: true,
                     // The formatter is invoked directly in WebpackDevServerUtils during development

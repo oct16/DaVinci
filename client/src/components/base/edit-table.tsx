@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Input, Select, InputNumber, Form } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
-import { dateTimeFormat } from '../../utils/common'
+import { dateTimeFormat } from '@/utils/common'
 import dayjs from 'dayjs'
 import TextArea from 'antd/lib/input/TextArea'
 
