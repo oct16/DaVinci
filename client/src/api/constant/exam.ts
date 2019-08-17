@@ -11,10 +11,16 @@ export class ExamAPIConstant {
         url: `/exam/examinee/${examId}/answer`,
         method: HttpMethod.GET
     })
-    register = (examineeName: string, token: string): HttpOption => ({
+    register = (name: string, token: string): HttpOption => ({
         url: '/exam/register',
         method: HttpMethod.POST,
-        data: { examineeName, token }
+        data: { name, token }
+    })
+
+    validToken = (token: string): HttpOption => ({
+        url: '/exam/valid-token',
+        method: HttpMethod.POST,
+        data: { token }
     })
 
     createToken(examId: number): HttpOption {
@@ -62,6 +68,13 @@ export class ExamAPIConstant {
         return {
             url: `/exam/${examId}`,
             method: HttpMethod.GET
+        }
+    }
+    validExam(examId: number, code: string): HttpOption {
+        return {
+            url: `/exam/valid-exam/${examId}`,
+            method: HttpMethod.POST,
+            data: { code }
         }
     }
     examPreview(examId: number): HttpOption {
@@ -137,6 +150,12 @@ export class ExamAPIConstant {
         return {
             url: `/exam/progress`,
             method: HttpMethod.GET
+        }
+    }
+    switchEvent(): HttpOption {
+        return {
+            url: `/exam/event/switch`,
+            method: HttpMethod.POST
         }
     }
 }

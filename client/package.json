@@ -60,6 +60,7 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
+    "query-string": "^6.8.2",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.1",
     "react-dev-utils": "^9.0.1",
@@ -87,7 +88,7 @@
     "workbox-webpack-plugin": "4.2.0"
   },
   "scripts": {
-    "dev": "node scripts/start.js",
+    "dev": "HTTPS=true node scripts/start.js",
     "start": "NODE_ENV=production node scripts/start.js",
     "build": "node --max-old-space-size=4096 scripts/build.js",
     "test": "node scripts/test.js"

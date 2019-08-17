@@ -53,6 +53,10 @@ export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd
     }
 
     componentWillUnmount() {
+        this.clearHandle()
+    }
+
+    clearHandle() {
         if (this.intervalHandle) {
             clearInterval(this.intervalHandle)
         }
@@ -61,6 +65,7 @@ export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd
     timeEnd() {
         const { onTimeEnd } = this.props
         onTimeEnd()
+        this.clearHandle()
     }
 
     tick() {

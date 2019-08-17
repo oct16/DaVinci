@@ -13,6 +13,7 @@ declare module 'koa' {
             // [key: string]: any
         }
         success: (data?: any) => void
+        error: (error?: any) => void
         forbidden: (data?: any) => void
         unauthorized: (data: any) => void
         paramsError: (error?: any) => void
@@ -24,6 +25,15 @@ export const contextExtend = async function(app: Koa) {
     const { context } = app
 
     context.paramsError = function(error: any) {
+        this.status = HttpStatus.BAD_REQUEST
+        this.body = commonMessage({
+            url: this.URL.href,
+            status: this.status,
+            message: error || getStatusText(this.status)
+        })
+    }
+
+    context.error = function(error: any) {
         this.status = HttpStatus.BAD_REQUEST
         this.body = commonMessage({
             url: this.URL.href,

@@ -8,8 +8,11 @@ export class Answer extends Basics {
     @Column({ type: 'text' })
     value: string
 
+    @Column()
+    questionId: number
+
     @ManyToOne(type => Question, question => question.answer)
-    @JoinColumn()
+    @JoinColumn({ name: 'question_id', referencedColumnName: 'id' })
     question: Question
 
     @ManyToOne(type => Examinee, e => e.answers)

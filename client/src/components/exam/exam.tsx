@@ -6,6 +6,7 @@ import { Modal } from 'antd'
 import ExamConfirmComponent from './exam-confirm'
 import { $Api } from '@api'
 import ExamFormComponent from './exam-form'
+import DetectBlurComponent from './detect-blur'
 import { QuestionType } from './questions'
 
 class ExamComponent extends Component<any> {
@@ -41,8 +42,8 @@ class ExamComponent extends Component<any> {
     async alertInfo() {
         await this.doSubmit()
         Modal.warning({
-            title: 'time end'.toUpperCase(),
-            content: 'Your answer has been automatically submitted',
+            title: '时间结束',
+            content: '你的答案已经自动提交',
             onOk: () => {
                 this.redirectHome()
             }
@@ -52,7 +53,7 @@ class ExamComponent extends Component<any> {
     async onSubmit() {
         await this.doSubmit()
         Modal.success({
-            title: 'submitted'.toUpperCase(),
+            title: '已提交！',
             onOk: () => {
                 this.redirectHome()
             }
@@ -129,6 +130,7 @@ class ExamComponent extends Component<any> {
                     <hr style={{ margin: 0, marginBottom: '3rem' }} />
                     <ExamFormComponent onChange={this.onChangeHandle.bind(this)} questions={this.state.questions} />
                     <ExamConfirmComponent onClick={this.onSubmit} />
+                    <DetectBlurComponent />
                 </div>
             </div>
         )

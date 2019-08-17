@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Button, Modal } from 'antd'
 
-export default class ExamConfirmComponent extends Component<any, any> {
+export default class ExamConfirmComponent extends Component<{ onClick: Function }> {
     state = {
         loading: false,
         visible: false
@@ -31,26 +31,22 @@ export default class ExamConfirmComponent extends Component<any, any> {
             <div>
                 <Modal
                     visible={visible}
-                    title={'submit your answers'.toUpperCase()}
+                    title={'提交答案'}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     footer={[
-                        <Button key="back" onClick={this.handleCancel}>
-                            Return
-                        </Button>,
-                        <Button key="submit" type="primary" loading={loading} onClick={this.handleOk}>
-                            Submit
+                        <Button key="submit" loading={loading} onClick={this.handleOk}>
+                            提交
                         </Button>
                     ]}
                 >
                     <p>
-                        Are you sure to submit your answers? <br /> It can't be modify after your submit
+                        是否要提交你的答案？ <br />
+                        一旦提交将无法进行修改
                     </p>
                 </Modal>
                 <div className="mt-2 d-flex justify-content-end">
-                    <Button onClick={this.showModal} type="primary">
-                        Submit
-                    </Button>
+                    <Button onClick={this.showModal}>提交</Button>
                 </div>
             </div>
         )

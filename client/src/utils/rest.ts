@@ -30,7 +30,7 @@ export class RESTFul {
                 'Content-Type': ContentType.JSON
             },
             withCredentials: true,
-            timeout: 30e3
+            timeout: 3e4
         }
         const opt = Object.assign(defaultOption, option)
 

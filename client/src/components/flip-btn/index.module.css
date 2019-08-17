@@ -1,0 +1,96 @@
+.flip-btn-box {
+    width: 240px;
+    height: 70px;
+    position: relative;
+}
+
+.flip-btn-box :global .flip-btn {
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 0;
+    transform: translate(-50%, -50%);
+    transition: all .3s ease-out;
+}
+
+.flip-btn-box :global .flip-text {
+    padding: 0 60px;
+    visibility: hidden;
+    transition: padding .3s ease-in .3s;
+}
+
+.flip-btn-box :global .flip-front,
+.flip-btn-box :global .flip-back {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    transform-style: flat;
+    transition: transform .3s ease-out;
+    box-sizing: content-box;
+}
+
+.flip-btn-box :global .flip-front {
+    color: #313131;
+    background: white;
+    border: 2px solid #313131;
+    transform: rotateX(0deg) translateZ(25px);
+}
+
+.flip-btn-box :global .flip-back {
+    color: #fff;
+    background-color: #313131;
+    border: 2px solid #313131;
+    transform: rotateX(90deg) translateZ(25px);
+    overflow: hidden;
+}
+
+.flip-btn-box :global .flip-btn.active .flip-front {
+    transform: rotateX(-90deg) translateZ(25px);
+}
+
+.flip-btn-box :global .flip-btn.active .flip-back {
+    transform: rotateX(0deg) translateZ(25px);
+    text-align: left;
+    border-radius: 10px
+}
+
+.flip-btn-box :global .flip-btn.active .flip-text {
+    padding: 0 120px;
+}
+
+.flip-btn-box :global .flip-input {
+    border: none;
+    width: 180px;
+    padding: 0 10px;
+    color: black;
+    display: inline-block;
+}
+
+.flip-btn-box :global .flip-back button {
+    width: 60px;
+    border: none;
+    background: black;
+    margin: 0;
+    padding: 0;
+}
+
+.flip-btn-box :global .flip-back button:disabled {
+    color: #666;
+}
+
+
+.flip-btn-box :global .flip-input:focus,
+.flip-btn-box :global button:focus {
+    outline: none;
+}
+
+.flip-btn-wrap :global .ant-form-explain {
+    color: #666;
+}

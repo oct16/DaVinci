@@ -5,6 +5,7 @@ import { Code } from './Code'
 import { Answer } from './Answer'
 
 export enum QuestionEnums {
+    INPUT = 'INPUT',
     TEXT = 'TEXT',
     SELECT = 'SELECT',
     MULTIPLE_SELECT = 'MULTIPLE_SELECT',
@@ -19,7 +20,7 @@ export class Question extends Basics {
     @Column({ unique: true, type: 'varchar', length: 255 })
     question: string
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     questionCode: string
 
     @OneToMany(type => Select, select => select.question)

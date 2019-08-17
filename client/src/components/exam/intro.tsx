@@ -1,39 +1,95 @@
 import React, { Component } from 'react'
 import s from './intro.module.css'
 import cn from 'classnames'
+import queryString from 'query-string'
 
 import { withRouter, RouteComponentProps } from 'react-router'
 import { $Api } from '@api'
-import { Icon, Button } from 'antd'
+import { Icon } from 'antd'
 import { history } from '@/utils/history'
+import FlipBtnComponent from '../flip-btn/index'
+import { finalize } from 'rxjs/operators'
 
 class ExamIntroComponent extends Component<RouteComponentProps<{ examId: string }>> {
     state = {
         title: '',
         minutes: 0,
-        count: 0
+        count: 0,
+        btnIsLoading: false
     }
-
+    _isMounted: boolean
     constructor(props) {
         super(props)
         this.getData()
+        this.getProgress()
     }
 
-    getData(): void {
-        const examId = Number(this.props.match.params.examId)
-        $Api.examService.getExam(examId).subscribe(res => {
-            const { exam } = res
-            this.setState({
-                title: exam.name,
-                minutes: (exam.time / (1000 * 60)).toFixed(0),
-                count: exam.questions.length
-            })
+    componentWillUnmount() {
+        this._isMounted = false
+    }
+
+    componentDidMount() {
+        this._isMounted = true
+    }
+    getProgress() {
+        $Api.examService.progress().subscribe(({ inProgress, examId }) => {
+            if (inProgress) {
+                history.push(`/exam/${examId}`)
+            }
         })
+    }
+
+    goHome() {
+        history.push('/')
     }
 
     goExam(): void {
         const examId = Number(this.props.match.params.examId)
         history.push(`/exam/${examId}`)
+    }
+
+    getData(): void {
+        const query = queryString.parse(this.props.location.search)
+
+        if (!query.code) {
+            this.goHome()
+        }
+
+        const examId = Number(this.props.match.params.examId)
+        $Api.examService.validExam(examId, query.code as string).subscribe(
+            exam => {
+                this.setState({
+                    title: exam.name,
+                    minutes: (exam.time / (1000 * 60)).toFixed(0),
+                    count: exam.questionCount
+                })
+            },
+            () => {
+                this.goHome()
+            }
+        )
+    }
+
+    onRegister(name: string): void {
+        const query = queryString.parse(this.props.location.search)
+        this.setState({ btnIsLoading: true })
+        $Api.examService
+            .register(name, query.code as string)
+            .pipe(
+                finalize(() => {
+                    setTimeout(() => {
+                        this._isMounted && this.setState({ btnIsLoading: false })
+                    }, 1000)
+                })
+            )
+            .subscribe(
+                () => {
+                    this.goExam()
+                },
+                () => {
+                    this.goHome()
+                }
+            )
     }
 
     render() {
@@ -71,21 +127,7 @@ class ExamIntroComponent extends Component<RouteComponentProps<{ examId: string 
                     <b>答题开始即开始计时，中途不可暂停，如超时则自动提交</b>
                     <Rules minutes={this.state.minutes} count={this.state.count} />
                 </div>
-
-                <div className={s.btnBox}>
-                    <a href="#" className={s.btn}>
-                        <span className={s.text} />
-                        <span className={s['flip-front']}>
-                            <Icon
-                                style={{ verticalAlign: 'text-bottom', fontSize: '1rem', color: 'balck' }}
-                                type="arrow-right"
-                            />
-                        </span>
-                        <span onClick={this.goExam.bind(this)} className={s['flip-back']}>
-                            Start Exam
-                        </span>
-                    </a>
-                </div>
+                <FlipBtnComponent isLoading={this.state.btnIsLoading} onRegister={this.onRegister.bind(this)} />
             </div>
         )
     }

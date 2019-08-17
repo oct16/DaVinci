@@ -18,8 +18,12 @@ export class ExamService extends BaseService {
         return this.request(this.examConstant.examineeAnswer(examId))
     }
 
-    register(examineeName: string, token: string): Observable<any> {
-        return this.request(this.examConstant.register(examineeName, token))
+    register(name: string, token: string): Observable<any> {
+        return this.request(this.examConstant.register(name, token))
+    }
+
+    validToken(token: string): Observable<any> {
+        return this.request(this.examConstant.validToken(token))
     }
 
     questions(): Observable<any> {
@@ -55,6 +59,9 @@ export class ExamService extends BaseService {
     getExam(examId: number): Observable<any> {
         return this.request(this.examConstant.getExam(examId))
     }
+    validExam(examId: number, code: string): Observable<any> {
+        return this.request(this.examConstant.validExam(examId, code))
+    }
     examPreview(examId: number): Observable<any> {
         return this.request(this.examConstant.examPreview(examId))
     }
@@ -79,5 +86,9 @@ export class ExamService extends BaseService {
 
     progress(): Observable<any> {
         return this.request(this.examConstant.progress())
+    }
+
+    switchEvent(): Observable<{ lives: number; count: number }> {
+        return this.request(this.examConstant.switchEvent())
     }
 }

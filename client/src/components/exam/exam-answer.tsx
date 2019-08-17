@@ -1,11 +1,11 @@
-import { withRouter } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import React, { Component } from 'react'
 import styles from './exam.module.css'
 import { $Api } from '@api'
 import ExamFormComponent from './exam-form'
 import { QuestionType } from './questions'
 
-class AdminExamAnswerComponent extends Component<any> {
+class AdminExamAnswerComponent extends Component<RouteComponentProps<any>> {
     formValue: { [key: number]: string }
 
     state: {

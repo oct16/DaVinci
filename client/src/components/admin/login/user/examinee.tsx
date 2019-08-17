@@ -70,11 +70,20 @@ export default class AdminExamineeComponent extends Component {
         $Api.examService.examinees().subscribe(res => {
             this.setState({
                 dataSource: res.map(item => {
-                    const { token } = item
+                    const { token, answers, createdAt } = item
                     const exam = token && token.exam
+                    let diffTime
+                    if (answers && answers.length) {
+                        const [firstA] = answers.slice(0, 1)
+                        const aTime = Number(new Date(firstA.createdAt))
+                        const cTime = Number(new Date(createdAt))
+                        // console.log(firstA.createdAt, createdAt)
+                        // console.log(aTime - cTime)
+                        diffTime = aTime - cTime
+                    }
                     return {
                         ...item,
-                        time: exam ? exam.time / 1000 / 60 + 'min' : '-',
+                        time: diffTime ? (diffTime / 1000 / 60).toFixed(1) + 'min' : '-',
                         exam: exam ? exam.name : '-'
                     }
                 })
@@ -85,7 +94,7 @@ export default class AdminExamineeComponent extends Component {
     render() {
         return (
             <EditTableComponent
-                noOperation
+                noOperation={true}
                 data={this.state.dataSource}
                 columns={this.columns}
                 onRowUpdated={this.onRowUpdated}

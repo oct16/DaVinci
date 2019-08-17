@@ -59,10 +59,10 @@ class EditableCell extends Component<any, any> {
                     <Form.Item style={{ margin: 0 }}>
                         {getFieldDecorator(dataIndex, {
                             rules: [
-                                {
-                                    required: true,
-                                    message: `Please Input ${title}!`
-                                }
+                                // {
+                                //     required: true,
+                                //     message: `Please Input ${title}!`
+                                // }
                             ],
                             initialValue: record[dataIndex]
                         })(this.getInput())}

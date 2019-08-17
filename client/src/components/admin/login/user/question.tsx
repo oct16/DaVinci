@@ -89,7 +89,7 @@ export default class AdminQuestionComponent extends Component {
             required: true,
             initialValue: 'TEXT',
             type: 'SELECT',
-            selects: ['TEXT', 'SELECT', 'MULTIPLE_SELECT', 'CODE']
+            selects: ['TEXT', 'INPUT', 'SELECT', 'MULTIPLE_SELECT', 'CODE']
         }
     ]
 

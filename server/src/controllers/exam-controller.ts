@@ -10,11 +10,13 @@ import { Exam } from '../orm/entity/Exam'
 import { Code, CodeEnumTypes } from '../orm/entity/Code'
 import { Answer } from '../orm/entity/Answer'
 import _ from 'lodash'
+import compose from 'koa-compose'
 
 type ContextMethod = (ctx: Koa.Context & any, next: Function) => Promise<void>
 
 export interface ExamControllerMethods {
     register: ContextMethod
+    validToken: ContextMethod
 
     examinees: ContextMethod
     variables: ContextMethod
@@ -35,7 +37,9 @@ export interface ExamControllerMethods {
     putSelection: ContextMethod
     createSelection: ContextMethod
 
-    exam: ContextMethod
+    switchEvent: compose.Middleware<any>
+    getExam: compose.Middleware<any>
+    validExam: compose.Middleware<any>
     createExam: ContextMethod
     allExam: ContextMethod
     putExam: ContextMethod
@@ -124,7 +128,6 @@ class ExamController implements ExamControllerMethods {
                 .findOne(token.exam.id, {
                     relations: ['questions']
                 })
-            examinee!.questionSnapshot = JSON.stringify(exam!.questions)
             await getConnection()
                 .getRepository(Examinee)
                 .save(examinee!)
@@ -137,7 +140,7 @@ class ExamController implements ExamControllerMethods {
                         .getRepository(Question)
                         .findOne(key)
                     const answer = new Answer()
-                    answer.value = Array.isArray(value) ? value.join('|') : value.toString()
+                    answer.value = Array.isArray(value) ? value.join('|*_*|') : value.toString()
                     answer.examinee = examinee!
                     answer.question = question!
 
@@ -160,10 +163,10 @@ class ExamController implements ExamControllerMethods {
         const examinees = await getConnection()
             .getRepository(Examinee)
             .find({
-                relations: ['token', 'token.exam', 'answers'],
-                order: {
-                    id: 'DESC'
-                }
+                relations: ['token', 'token.exam', 'answers']
+                // order: {
+                //     id: 'DESC'
+                // }
             })
         ctx.success(examinees)
         await next()
@@ -274,7 +277,7 @@ class ExamController implements ExamControllerMethods {
         }
 
         if (token.exam.id !== Number(examId)) {
-            ctx.forbidden('Invalid token for this exam')
+            ctx.forbidden('Invalid Token for this exam')
             return
         }
         await next()
@@ -332,9 +335,8 @@ class ExamController implements ExamControllerMethods {
         await next()
     }
 
-    exam = async (ctx: Koa.Context, next: Function) => {
+    findExam = async (ctx: Koa.Context, next: Function) => {
         const { examId } = ctx.params
-
         const exam = await getConnection()
             .getRepository(Exam)
             .findOne({
@@ -348,21 +350,86 @@ class ExamController implements ExamControllerMethods {
             ctx.paramsError('Exam not found')
             return
         }
-        // TODO sort by orm
 
-        const token = await getConnection()
-            .getRepository(Token)
-            .findOne(ctx.session.token!.id, {
-                relations: ['examinee']
-            })
-        exam.questions = exam.questions.sort((a, b) => a.id - b.id)
-        ctx.success({ exam, token })
+        ctx.state.exam = exam
         await next()
     }
 
+    validExam: compose.Middleware<Koa.ParameterizedContext<any, Koa.Context>> = compose([
+        this.findExam,
+        async (ctx: Koa.Context, next: Function) => {
+            const { code } = ctx.request.body
+            if (!code) {
+                ctx.paramsError('Code is required')
+                return
+            }
+            const token = await getConnection()
+                .getRepository(Token)
+                .findOne({
+                    where: {
+                        value: code
+                    }
+                })
+
+            if (!token) {
+                ctx.paramsError('Code error')
+                return
+            }
+            const exam: Exam = ctx.state.exam
+            if (!exam) {
+                ctx.paramsError('Exam not found')
+                return
+            }
+            ctx.success({ name: exam.name, questionCount: exam.questions.length, time: exam.time })
+        }
+    ])
+
+    switchEvent = async (ctx: Koa.Context, next: Function) => {
+        const lives = 5
+        const examinee = await getConnection()
+            .getRepository(Examinee)
+            .findOne(ctx.session.token!.examinee.id)
+
+        if (examinee) {
+            const switchCount = examinee.switchCount
+            examinee.switchCount = switchCount + 1
+            if (examinee.switchCount > lives) {
+                ctx.error('switchCount exceed than limit')
+                ctx.session.token = null
+                return
+            }
+            await getConnection()
+                .getRepository(Examinee)
+                .save(examinee)
+            ctx.success({ lives, count: examinee.switchCount })
+            return
+        }
+        ctx.error('switchEvent error')
+    }
+
+    getExam: compose.Middleware<Koa.ParameterizedContext<any, Koa.Context>> = compose([
+        this.findExam,
+        async (ctx: Koa.Context, next: Function) => {
+            const exam: Exam = ctx.state.exam
+            if (!exam) {
+                ctx.paramsError('Exam not found')
+                return
+            }
+            // TODO sort by orm
+
+            const token = await getConnection()
+                .getRepository(Token)
+                .findOne(ctx.session.token!.id, {
+                    relations: ['examinee']
+                })
+            exam.questions = exam.questions.sort((a, b) => a.id - b.id)
+            ctx.success({ exam, token })
+            await next()
+        }
+    ])
+
     examPreview = async (ctx: Koa.Context, next: Function) => {
         const { examId } = ctx.params
-
         const exam = await getConnection()
             .getRepository(Exam)
             .findOne({
@@ -434,10 +501,11 @@ class ExamController implements ExamControllerMethods {
         const record = await getConnection()
             .getRepository(Select)
             .find({
-                relations: ['question'],
                 order: {
-                    questionId: 'ASC'
-                }
+                    questionId: 'DESC',
+                    id: 'DESC'
+                },
+                relations: ['question']
             })
         ctx.success(record)
         await next()
@@ -564,7 +632,7 @@ class ExamController implements ExamControllerMethods {
                 // if (selects && selects.length) {
                 // crateSelects()
                 // }
-                createDefault()
+                await createDefault()
                 break
             case QuestionEnums.CODE:
                 if (questionCode) {
@@ -575,7 +643,7 @@ class ExamController implements ExamControllerMethods {
                 }
                 break
             default:
-                createDefault()
+                await createDefault()
                 break
         }
 
@@ -583,8 +651,28 @@ class ExamController implements ExamControllerMethods {
         await next()
     }
 
+    validToken = async (ctx: Koa.Context, next: Function) => {
+        const { token: tokenCode } = ctx.request.body
+        if (!tokenCode) {
+            ctx.forbidden('Invalid Code')
+        }
+        const token = await getConnection()
+            .getRepository(Token)
+            .createQueryBuilder('token')
+            .where('token.value = :value AND token.examinee IS NULL', { value: tokenCode })
+            .leftJoinAndSelect('token.exam', 'exam')
+            .getOne()
+
+        if (token) {
+            ctx.success({ examId: token.exam.id })
+            return
+        }
+        ctx.forbidden('Invalid Code')
+        return
+    }
+
     register = async (ctx: Koa.Context, next: Function) => {
-        const { token: tokenCode, examineeName } = ctx.request.body
+        const { token: tokenCode, name: examineeName } = ctx.request.body
 
         if (!tokenCode || !examineeName) {
             ctx.forbidden('Invalid Data')
@@ -597,7 +685,7 @@ class ExamController implements ExamControllerMethods {
             .getOne()
 
         if (!token) {
-            ctx.forbidden('Invalid Token')
+            ctx.forbidden('Invalid Code')
             return
         }
 

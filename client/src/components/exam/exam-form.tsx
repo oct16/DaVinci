@@ -3,7 +3,7 @@ import styles from './exam-form.module.css'
 import CodeEditorComponent from './code-editor'
 import SelectEditorComponent from './select-editor'
 import TextEditorComponent from './text-editor'
-import { Form } from 'antd'
+import { Form, Input } from 'antd'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { vs } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 class ExamFormComponent extends Component<Readonly<{ form: any; onChange: any; values: any; questions: any }>> {
@@ -43,6 +43,10 @@ class ExamFormComponent extends Component<Readonly<{ form: any; onChange: any; v
                         })(<SelectEditorComponent question={question.question} selects={selects} multiple={true} />)}
                     </div>
                 )
+            case 'INPUT':
+                return getFieldDecorator(question.id.toString(), {
+                    initialValue: this.getQuestionValue(question) || ''
+                })(<Input />)
             default:
                 return getFieldDecorator(question.id.toString(), {
                     initialValue: this.getQuestionValue(question) || ''
@@ -57,7 +61,7 @@ class ExamFormComponent extends Component<Readonly<{ form: any; onChange: any; v
         const { id, type } = question
         const value = this.props.values[id]
         if (type === 'MULTIPLE_SELECT' || type === 'SELECT') {
-            return Array.from(value.split('|'))
+            return Array.from(value.split('|*_*|'))
         }
         return this.props.values[id]
     }
