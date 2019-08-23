@@ -10,7 +10,7 @@ class Timer extends Component<any> {
     }
 }
 
-export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd: Function }>, any> {
+export class TimeDown extends Component<Readonly<{ remainTime: number; auto?: boolean; onTimeEnd: Function }>, any> {
     secondsRemaining: number
     endTime: number
     intervalHandle: any
@@ -48,7 +48,9 @@ export class TimeDown extends Component<Readonly<{ remainTime: number; onTimeEnd
             )
             this.endTime = endTime
             this.setState({ minute, seconds })
-            this.startTimeDown()
+            if (this.props.auto !== false) {
+                this.startTimeDown()
+            }
         }
     }
 

@@ -31,18 +31,12 @@ deploy:
 
     - provider: script
       skip_cleanup: true
-      script: echo 'deploy app' && rsync -ravz --progress -e "ssh -o StrictHostKeyChecking=no" $TRAVIS_BUILD_DIR/client/build/ $SERVER_USER@$SERVER_HOST:$DESTINATION_PATH/app/
+      script: echo 'deploy app' && rsync -ravz --progress -e "ssh -o StrictHostKeyChecking=no" $TRAVIS_BUILD_DIR/client/build/ $SERVER_USER@$SERVER_HOST:$DESTINATION_PATH/app/ && npm i
       on:
           branch: master
 
     - provider: script
       skip_cleanup: true
-      script: echo 'deploy server' && rsync -ravz --progress -e "ssh -o StrictHostKeyChecking=no" $TRAVIS_BUILD_DIR/server/ $SERVER_USER@$SERVER_HOST:$DESTINATION_PATH/server/
-      on:
-          branch: master
-
-    - provider: script
-      skip_cleanup: true
-      script: echo 'run server' && ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST 'cd $DESTINATION_PATH/server && npm i && pid=`sudo lsof -t -i:5000`; if test $pid; then kill $(sudo lsof -t -i:5000);fi && nohup TYPEORM_HOST=$TYPEORM_HOST TYPEORM_PASSWORD=$TYPEORM_PASSWORD NODE_ENV=$NODE_ENV npm run start &'
+      script: echo 'deploy server' && rsync -ravz --progress -e "ssh -o StrictHostKeyChecking=no" $TRAVIS_BUILD_DIR/server/ $SERVER_USER@$SERVER_HOST:$DESTINATION_PATH/server/ && npm i
       on:
           branch: master

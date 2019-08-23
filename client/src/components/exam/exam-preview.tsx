@@ -104,7 +104,7 @@ class AdminExamPreviewComponent extends Component<any> {
                     <ExamTitle />
                     <div className="d-flex justify-content-between">
                         <Examinee />
-                        <TimeDown remainTime={this.state.remainTime} onTimeEnd={this.onTimeEnd} />
+                        <TimeDown remainTime={this.state.remainTime} auto={false} onTimeEnd={this.onTimeEnd} />
                     </div>
                     <hr style={{ margin: 0, marginBottom: '3rem' }} />
                     <ExamFormComponent onChange={this.onChangeHandle.bind(this)} questions={this.state.questions} />
