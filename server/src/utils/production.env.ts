@@ -1,7 +1,7 @@
 import Koa from 'koa'
 import cors from '@koa/cors'
 
-const whitelist = ['http://localhost:4000', 'http://localhost:3999', 'http://148.70.114.23:8080']
+const whitelist = ['http://localhost:4000', 'http://localhost:3999', 'https://fetest.online']
 
 function checkOriginAgainstWhitelist(ctx) {
     const requestOrigin = ctx.accept.headers.origin
