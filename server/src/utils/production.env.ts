@@ -1,11 +1,10 @@
 import Koa from 'koa'
 import cors from '@koa/cors'
-
-const whitelist = ['http://localhost:4000', 'http://localhost:3999', 'https://fetest.online']
+import { WHITE_LIST } from '../configs/white-list'
 
 function checkOriginAgainstWhitelist(ctx) {
     const requestOrigin = ctx.accept.headers.origin
-    if (!whitelist.includes(requestOrigin)) {
+    if (!WHITE_LIST.includes(requestOrigin)) {
         return ctx.throw(`🙈 ${requestOrigin} is not a valid origin`)
     }
     return requestOrigin
