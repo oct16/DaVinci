@@ -1,5 +1,6 @@
 const NODE_ENV = process.env.NODE_ENV
-const SERVER_PATH = 'https://fetest.online'
+// const SERVER_PATH = 'https://fetest.online'
+const SERVER_PATH = ''
 
 const isProd = NODE_ENV === 'production'
 
