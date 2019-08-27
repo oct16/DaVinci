@@ -4,4 +4,4 @@
 
 ### A simple interview interface
 
-##### Power by cot16
+##### Power by oct16
