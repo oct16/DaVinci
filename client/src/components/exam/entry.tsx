@@ -10,7 +10,8 @@ function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field])
 }
 
-class EntryComponent extends Component<FormComponentProps<any> & RouteComponentProps<any>> {
+class EntryComponent extends Component<any> {
+    // class EntryComponent extends Component<FormComponentProps<any> & RouteComponentProps<any>> {
     visible: boolean
     state = {
         isLoading: false,
@@ -105,4 +106,4 @@ class EntryComponent extends Component<FormComponentProps<any> & RouteComponentP
         )
     }
 }
-export default Form.create()(withRouter(EntryComponent))
+export default Form.create<any>()(withRouter(EntryComponent))
