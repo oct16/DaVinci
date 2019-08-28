@@ -97,7 +97,7 @@ class EditableTable extends Component<TableFormProps, any> {
             isLoading: false,
             pager: null,
             data: [],
-            columns: [],
+            columns: [] as TableColumnProps,
             editingKey: ''
         }
     }
@@ -135,7 +135,16 @@ class EditableTable extends Component<TableFormProps, any> {
                               )
                           }
                       }
-            ].filter(Boolean)
+            ]
+                .filter(Boolean)
+                .map(col => {
+                    if (!col.render) {
+                        col.render = val => {
+                            return val ? val : '-'
+                        }
+                    }
+                    return col
+                })
         })
     }
 

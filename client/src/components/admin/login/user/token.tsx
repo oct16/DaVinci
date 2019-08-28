@@ -109,14 +109,15 @@ export default class AdminTokenComponent extends Component {
     }
 
     getTokens(page?: number): void {
-        $Api.examService.tokens(page).subscribe(res => {
-            res.data.map(item => ({
+        $Api.examService.tokens(page).subscribe(source => {
+            source.data = source.data.map(item => ({
                 ...item,
                 exam: item.exam.name,
-                examinee: item.examinee ? item.examinee.name : '-'
+                examinee: item.examinee ? item.examinee.name : null
             }))
+
             this.setState({
-                source: res
+                source
             })
         })
     }

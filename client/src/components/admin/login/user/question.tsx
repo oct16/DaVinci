@@ -109,7 +109,7 @@ export default class AdminQuestionComponent extends Component {
             this.setState({
                 dataSource: res.map(item => ({
                     ...item,
-                    selects: ~item.type.indexOf('SELECT') ? item.selects && item.selects.map(s => s.value) : '-'
+                    selects: ~item.type.indexOf('SELECT') ? item.selects && item.selects.map(s => s.value) : null
                 }))
             })
         })

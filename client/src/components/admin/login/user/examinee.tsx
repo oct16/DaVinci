@@ -83,8 +83,8 @@ export default class AdminExamineeComponent extends Component {
                     }
                     return {
                         ...item,
-                        time: diffTime ? (diffTime / 1000 / 60).toFixed(1) + 'min' : '-',
-                        exam: exam ? exam.name : '-'
+                        time: diffTime ? (diffTime / 1000 / 60).toFixed(1) + 'min' : null,
+                        exam: exam ? exam.name : null
                     }
                 })
             })
