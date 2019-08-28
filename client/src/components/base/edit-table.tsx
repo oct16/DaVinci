@@ -1,9 +1,20 @@
 import React, { Component } from 'react'
-import { Table, Input, Select, InputNumber, Form } from 'antd'
+import { Table, Input, Select, InputNumber, Form, Pagination } from 'antd'
 import { ColumnProps } from 'antd/lib/table'
 import { dateTimeFormat } from '@/utils/common'
 import dayjs from 'dayjs'
 import TextArea from 'antd/lib/input/TextArea'
+import { FormComponentProps } from 'antd/lib/form'
+import { Pager } from '@/api/model/basics'
+
+interface TableFormProps<T = any> extends FormComponentProps<any> {
+    data?: T
+    pager?: Pager<T>
+    columns?: any
+    noOperation?: boolean
+    onPageChange?: (page: number) => void
+    onRowUpdated: ({ key, row }, callback: () => void) => void
+}
 
 export interface TableColumnProps extends ColumnProps<any> {
     editable?: boolean
@@ -74,20 +85,24 @@ class EditableCell extends Component<any, any> {
         )
     }
 
-    render() {
+    render(): JSX.Element {
         return <EditableContext.Consumer>{(this as any).renderCell}</EditableContext.Consumer>
     }
 }
 
-class EditableTable extends Component<any, any> {
+class EditableTable extends Component<TableFormProps, any> {
     constructor(props) {
         super(props)
-        this.state = { columns: [], data: [], editingKey: '' }
+        this.state = {
+            isLoading: false,
+            pager: null,
+            data: [],
+            columns: [],
+            editingKey: ''
+        }
     }
 
-    componentDidMount() {}
-
-    setColumns(columns) {
+    setColumns(columns): void {
         this.setState({
             columns: [
                 ...columns,
@@ -124,8 +139,17 @@ class EditableTable extends Component<any, any> {
         })
     }
 
-    componentWillReceiveProps(nextProps) {
-        const arrayData = nextProps.data
+    componentWillReceiveProps(nextProps): void {
+        let arrayData
+        let pager: Pager<any>
+        if (nextProps.pager as Pager<any>) {
+            arrayData = nextProps.pager.data
+            pager = { ...nextProps.pager }
+            delete pager.data
+            this.setState({ isLoading: false })
+        } else {
+            arrayData = nextProps.data
+        }
         const data = arrayData.map(item => {
             const { createdAt, updatedAt } = item
             return {
@@ -136,17 +160,23 @@ class EditableTable extends Component<any, any> {
             }
         })
 
-        this.setState({ data })
+        this.setState({ data, pager })
         this.setColumns(nextProps.columns)
     }
 
-    isEditing = record => record.key === this.state.editingKey
+    isEditing: (...arg) => boolean = record => record.key === this.state.editingKey
 
-    cancel = () => {
+    cancel = (): void => {
         this.setState({ editingKey: '' })
     }
+    onChange(page: number): void {
+        this.setState({
+            isLoading: true
+        })
 
-    save(form, key) {
+        this.props.onPageChange && !this.state.isLoading && this.props.onPageChange(page)
+    }
+    save(form, key): void {
         form.validateFields((error, row) => {
             if (error) {
                 return
@@ -175,11 +205,11 @@ class EditableTable extends Component<any, any> {
         })
     }
 
-    edit(key) {
+    edit(key): void {
         this.setState({ editingKey: key })
     }
 
-    render() {
+    render(): JSX.Element {
         const components = {
             body: {
                 cell: EditableCell
@@ -207,17 +237,29 @@ class EditableTable extends Component<any, any> {
         return (
             <EditableContext.Provider value={this.props.form}>
                 <Table
+                    loading={this.state.isLoading}
                     components={components}
                     bordered={true}
                     dataSource={this.state.data}
                     columns={columns}
-                    pagination={{
-                        onChange: this.cancel
-                    }}
+                    pagination={false}
                 />
+                {this.state.pager ? (
+                    <div className="d-flex justify-content-end">
+                        <Pagination
+                            className="mt-3"
+                            onChange={this.onChange.bind(this)}
+                            current={this.state.pager.page}
+                            pageSize={this.state.pager.size}
+                            total={this.state.pager.total}
+                        />
+                    </div>
+                ) : (
+                    ''
+                )}
             </EditableContext.Provider>
         )
     }
 }
 
-export default Form.create<any>({})(EditableTable)
+export default Form.create<TableFormProps>({})(EditableTable)

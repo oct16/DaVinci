@@ -172,16 +172,14 @@ class ExamController implements ExamControllerMethods {
         await next()
     }
     tokens = async (ctx: Koa.Context, next: Function) => {
-        const tokens = await getConnection()
-            .getRepository(Token)
-            .find({
-                relations: ['examinee', 'exam'],
-                order: {
-                    id: 'DESC'
-                }
-            })
-
-        ctx.success(tokens)
+        const repo = await getConnection().getRepository(Token)
+        const res = await ctx.findByPagination(repo, {
+            relations: ['examinee', 'exam'],
+            order: {
+                id: 'DESC'
+            }
+        })
+        ctx.success(res)
         await next()
     }
 
@@ -498,16 +496,15 @@ class ExamController implements ExamControllerMethods {
     }
 
     getSelections = async (ctx: Koa.Context, next: Function) => {
-        const record = await getConnection()
-            .getRepository(Select)
-            .find({
-                order: {
-                    questionId: 'DESC',
-                    id: 'DESC'
-                },
-                relations: ['question']
-            })
-        ctx.success(record)
+        const repo = await getConnection().getRepository(Select)
+        const res = await ctx.findByPagination(repo, {
+            order: {
+                questionId: 'DESC',
+                id: 'DESC'
+            },
+            relations: ['question']
+        })
+        ctx.success(res)
         await next()
     }
 

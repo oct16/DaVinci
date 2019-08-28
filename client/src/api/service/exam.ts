@@ -2,6 +2,7 @@ import { BaseService } from './base-service'
 import { ExamAPIConstant } from '../constant/exam'
 import { Observable } from 'rxjs'
 import { Question } from '../model/exam-model'
+import { Pager } from '../model/basics'
 
 export class ExamService extends BaseService {
     protected examConstant: ExamAPIConstant
@@ -38,8 +39,8 @@ export class ExamService extends BaseService {
         return this.request(this.examConstant.createQuestion(form))
     }
 
-    selections(): Observable<any> {
-        return this.request(this.examConstant.selections())
+    selections(page?: number): Observable<Pager<any>> {
+        return this.request(this.examConstant.selections(page))
     }
 
     questionSelects(questionId: number): Observable<any> {
@@ -71,8 +72,8 @@ export class ExamService extends BaseService {
     createExam(data: { name: string; questions: string[] }): Observable<any> {
         return this.request(this.examConstant.createExam(data))
     }
-    tokens(): Observable<any> {
-        return this.request(this.examConstant.tokens())
+    tokens(page?: number): Observable<Pager<any>> {
+        return this.request(this.examConstant.tokens(page))
     }
     createToken(examId: number): Observable<any> {
         return this.request(this.examConstant.createToken(examId))

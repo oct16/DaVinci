@@ -3,7 +3,8 @@ import Koa from 'koa'
 import { Token } from '../orm/entity/Token'
 import { commonMessage } from './common'
 import { User } from '../orm/entity/User'
-import { Connection } from 'typeorm'
+import { Connection, Repository } from 'typeorm'
+import { findByPagination, PaginationOptions } from './pagination'
 
 declare module 'koa' {
     interface Context {
@@ -17,12 +18,15 @@ declare module 'koa' {
         forbidden: (data?: any) => void
         unauthorized: (data: any) => void
         paramsError: (error?: any) => void
+        findByPagination: <Entity>(repository: Repository<Entity>, options: PaginationOptions<Entity>) => Promise<void>
         connection: Connection
     }
 }
 
 export const contextExtend = async function(app: Koa) {
     const { context } = app
+
+    context.findByPagination = findByPagination
 
     context.paramsError = function(error: any) {
         this.status = HttpStatus.BAD_REQUEST

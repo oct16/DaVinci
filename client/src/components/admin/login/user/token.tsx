@@ -12,7 +12,13 @@ export default class AdminTokenComponent extends Component {
         this.dialogRef = React.createRef<any>()
     }
     state = {
-        dataSource: [],
+        source: {
+            data: [],
+            size: null,
+            page: null,
+            pages: null,
+            total: null
+        },
         dialogVisible: false,
         formFields: [],
         columns: []
@@ -102,14 +108,15 @@ export default class AdminTokenComponent extends Component {
         return $Api.examService.exams().toPromise()
     }
 
-    getTokens(): void {
-        $Api.examService.tokens().subscribe(res => {
+    getTokens(page?: number): void {
+        $Api.examService.tokens(page).subscribe(res => {
+            res.data.map(item => ({
+                ...item,
+                exam: item.exam.name,
+                examinee: item.examinee ? item.examinee.name : '-'
+            }))
             this.setState({
-                dataSource: res.map(item => ({
-                    ...item,
-                    exam: item.exam.name,
-                    examinee: item.examinee ? item.examinee.name : '-'
-                }))
+                source: res
             })
         })
     }
@@ -140,6 +147,10 @@ export default class AdminTokenComponent extends Component {
         })
     }
 
+    onPageChange(page: number): void {
+        this.getTokens(page)
+    }
+
     render() {
         return (
             <div>
@@ -164,7 +175,8 @@ export default class AdminTokenComponent extends Component {
                     fields={this.state.formFields}
                 />
                 <EditTableComponent
-                    data={this.state.dataSource}
+                    onPageChange={this.onPageChange.bind(this)}
+                    pager={this.state.source}
                     columns={this.state.columns}
                     onRowUpdated={this.onRowUpdated}
                 />

@@ -7,7 +7,13 @@ export default class AdminSelectionComponent extends Component {
     dialogRef: any
     questions: any
     state = {
-        dataSource: [],
+        source: {
+            data: [],
+            size: null,
+            page: null,
+            pages: null,
+            total: null
+        },
         dialogVisible: false,
         formFields: []
     }
@@ -107,14 +113,22 @@ export default class AdminSelectionComponent extends Component {
         })
     }
 
-    getSelections() {
-        $Api.examService.selections().subscribe(res => {
-            this.setState({
-                dataSource: res.map(item => {
+    getSelections(page?: number) {
+        $Api.examService.selections(page).subscribe(res => {
+            const source = {
+                ...res,
+                data: res.data.map(item => {
                     return { ...item, question: item.question.question }
                 })
+            }
+            this.setState({
+                source
             })
         })
+    }
+
+    onPageChange(page: number): void {
+        this.getSelections(page)
     }
 
     render() {
@@ -141,7 +155,8 @@ export default class AdminSelectionComponent extends Component {
                     />
                 </div>
                 <EditTableComponent
-                    data={this.state.dataSource}
+                    onPageChange={this.onPageChange.bind(this)}
+                    pager={this.state.source}
                     columns={this.columns}
                     onRowUpdated={this.onRowUpdated}
                 />

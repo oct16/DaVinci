@@ -37,10 +37,11 @@ export class ExamAPIConstant {
             data
         }
     }
-    tokens(): HttpOption {
+    tokens(page?: number): HttpOption {
         return {
             url: '/exam/tokens',
-            method: HttpMethod.GET
+            method: HttpMethod.GET,
+            params: { page }
         }
     }
 
@@ -114,10 +115,11 @@ export class ExamAPIConstant {
         }
     }
 
-    selections(): HttpOption {
+    selections(page?: number): HttpOption {
         return {
             url: '/exam/selections',
-            method: HttpMethod.GET
+            method: HttpMethod.GET,
+            params: { page }
         }
     }
     questionSelects(questionId: number): HttpOption {
