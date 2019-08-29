@@ -35,7 +35,7 @@ export async function Pagination<Entity>(
 ): Promise<Pager<Entity>> {
     const page = options.page || 1
     const size = options.size || 10
-    const findOpt = {
+const findOpt = {
         ...options,
         skip: (page - 1) * size,
         take: size
