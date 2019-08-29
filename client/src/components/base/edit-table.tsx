@@ -155,7 +155,8 @@ class EditableTable extends Component<TableFormProps, any> {
             arrayData = nextProps.pager.data
             pager = { ...nextProps.pager }
             delete pager.data
-            this.setState({ isLoading: false })
+
+            this.setState({ isLoading: false, pager })
         } else {
             arrayData = nextProps.data
         }
@@ -169,7 +170,7 @@ class EditableTable extends Component<TableFormProps, any> {
             }
         })
 
-        this.setState({ data, pager })
+        this.setState({ data })
         this.setColumns(nextProps.columns)
     }
 

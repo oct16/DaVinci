@@ -25,8 +25,8 @@ export async function findByPagination<Entity>(
     options: PaginationOptions<Entity>
 ): Promise<Pager<Entity>> {
     const ctx = this as Koa.Context
-    const { page, size } = ctx.query
-    return await Pagination(repository, { ...options, page, size })
+    const { page, size }: { [key: string]: string } = ctx.query
+    return await Pagination(repository, { ...options, page: Number(page), size: Number(size) })
 }
 
 export async function Pagination<Entity>(
@@ -48,6 +48,6 @@ export async function Pagination<Entity>(
         total,
         page,
         pages: Math.ceil(total / size),
-        size: data.length
+        size
     }
 }
